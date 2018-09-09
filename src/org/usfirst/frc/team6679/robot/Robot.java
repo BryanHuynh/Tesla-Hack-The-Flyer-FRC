@@ -11,11 +11,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -34,18 +36,23 @@ public class Robot extends IterativeRobot {
 	final int backwardsPin = 0;
 	final int deadZone = 200;											// deadzone for analog inputs
 	
-	VictorSPX master = new VictorSPX(0);
+	WPI_VictorSPX master = new WPI_VictorSPX(0);
 	
+	RobotDrive drive;
 	
 	AHRS ahrs;
 
 	public void robotInit() {
+		
 		forwards = new AnalogInput(forwardsPin);
 		backwards = new AnalogInput(backwardsPin);
 		
 		master.set(ControlMode.PercentOutput, 0);			//I think this is the type of value that will be sent out of Can bus to esc
 		
 		master.setNeutralMode(NeutralMode.Brake);			//I think this is the shit it does when value is 0
+		
+		
+		drive = new RobotDrive(master,master);
 	}
 
 	public void autonomousInit() {
